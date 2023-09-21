@@ -9,5 +9,10 @@ namespace Unity_Essentials.Static
 			int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
 			SceneManager.LoadSceneAsync(currentSceneIndex + 1);
 		}
+
+		public static void ReloadScene()
+		{
+			SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+		}
 	}
 }
