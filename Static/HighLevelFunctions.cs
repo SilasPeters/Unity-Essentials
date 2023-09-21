@@ -3,7 +3,7 @@ using System.Collections;
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace Submodules.Unity_Essentials.Static
+namespace Unity_Essentials.Static
 {
 	public static class HighLevelFunctions
 	{
@@ -20,6 +20,17 @@ namespace Submodules.Unity_Essentials.Static
 			}
 
 			void setNextTimestamp() => nextTimestamp = Time.time + duration;
+		}
+
+		public static IEnumerator Lerp(float duration, Action<float> action)
+		{
+			float timeStart = Time.time;
+
+			while (Time.time - timeStart < duration)
+			{
+				action.Invoke((Time.time - timeStart) / duration);
+				yield return null;
+			}
 		}
 	}
 }

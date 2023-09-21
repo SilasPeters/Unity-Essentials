@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Submodules.Unity_Essentials.Static
+namespace Unity_Essentials.Static
 {
 	public static class Movement
 	{
