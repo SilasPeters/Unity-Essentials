@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Unity_Essentials.Components
 {
-	public class PlayerController : MonoBehaviour
+	public class FirstPersonController : MonoBehaviour
 	{
         [Header("Movement")]
         public float movementSpeed;

@@ -6,7 +6,7 @@ namespace Unity_Essentials.Static
 	{
 		protected abstract void Awake();
 
-		private static T _instance;
+		protected static T _instance;
 		public static T Instance
 		{
 			get
