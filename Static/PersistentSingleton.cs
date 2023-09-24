@@ -19,4 +19,3 @@ namespace Unity_Essentials.Static
 		}
 	}
 }
->>>>>>> Stashed changes
