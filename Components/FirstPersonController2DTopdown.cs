@@ -1,3 +1,4 @@
+using Unity_Essentials.Static;
 using UnityEngine;
 
 namespace Unity_Essentials.Components
@@ -12,18 +13,22 @@ namespace Unity_Essentials.Components
 		public KeyCode rotateRight;
 		public KeyCode forward;
 		public KeyCode backward;
-		
-		private void Start()
-		{
-			Cursor.visible  = false;
-		}
+
+		public KeyCode beamHorizontal;
+		public KeyCode beamVertical;
+		public KeyCode spot;
+
+		// Get references to prefabs
+		public GameObject beamHorizontalPrefab;
+		public GameObject beamVerticalPrefab;
+		public GameObject spotPrefab;
 
 		public void Update()
 		{
-			if (GameManager.currentGameState != GameManager.GameState.Playing)
+			if (Singleton<GameManager>.Instance.CurrentGameState != GameManager.GameState.Playing)
 				return;
 
-			// Get input to determine movement direction
+			// Get input of player
 			float forwardMovement = 0;
 			float rotationDegrees = 0;
 
@@ -39,6 +44,22 @@ namespace Unity_Essentials.Components
 			// Apply movement and rotation
 			transform.Rotate(0, 0, rotationDegrees * Time.deltaTime);
 			transform.localPosition += transform.up * (forwardMovement * Time.deltaTime);
+
+			// Get input of antagonist
+			Vector3 mousePos = Camera.main!.ScreenToWorldPoint(Input.mousePosition);
+
+			# nullable enable
+			GameObject? placedPrefab = null;
+			if (Input.GetKeyDown(beamHorizontal))
+				placedPrefab = Instantiate(beamHorizontalPrefab);
+			if (Input.GetKeyDown(beamVertical))
+				placedPrefab = Instantiate(beamVerticalPrefab);
+			if (Input.GetKeyDown(spot))
+				placedPrefab = Instantiate(spotPrefab);
+
+			if (placedPrefab != null)
+				placedPrefab.transform.position = new Vector3(mousePos.x, mousePos.y, placedPrefab.transform.position.z);
+			#nullable disable
 		}
 	}
 }

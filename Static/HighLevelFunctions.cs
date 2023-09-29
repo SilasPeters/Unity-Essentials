@@ -32,5 +32,10 @@ namespace Unity_Essentials.Static
 				yield return null;
 			}
 		}
+
+		public static IEnumerator Wait(float seconds)
+		{
+			yield return new WaitForSeconds(seconds);
+		}
 	}
 }
