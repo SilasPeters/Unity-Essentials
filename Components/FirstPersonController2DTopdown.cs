@@ -7,6 +7,8 @@ namespace Unity_Essentials.Components
 	{
 		public float movementSpeed;
 		public float rotationSpeed;
+		public int maxSpotCount;
+		public int maxBeamCount;
 
 		// Define keybindings
 		public KeyCode rotateLeft;
@@ -50,11 +52,11 @@ namespace Unity_Essentials.Components
 
 			# nullable enable
 			GameObject? placedPrefab = null;
-			if (Input.GetKeyDown(beamHorizontal))
+			if (Input.GetKeyDown(beamHorizontal) && Singleton<GameManager>.Instance.BeamCount < maxBeamCount)
 				placedPrefab = Instantiate(beamHorizontalPrefab);
-			if (Input.GetKeyDown(beamVertical))
+			if (Input.GetKeyDown(beamVertical) && Singleton<GameManager>.Instance.BeamCount < maxBeamCount)
 				placedPrefab = Instantiate(beamVerticalPrefab);
-			if (Input.GetKeyDown(spot))
+			if (Input.GetKeyDown(spot) && Singleton<GameManager>.Instance.SpotCount < maxSpotCount)
 				placedPrefab = Instantiate(spotPrefab);
 
 			if (placedPrefab != null)
