@@ -47,6 +47,11 @@ namespace Unity_Essentials.Components
 			transform.Rotate(0, 0, rotationDegrees * Time.deltaTime);
 			transform.localPosition += transform.up * (forwardMovement * Time.deltaTime);
 
+			if (Mathf.Abs(transform.position.y) > 5)
+				transform.position = new Vector3(transform.position.x, 5, transform.position.z);
+			if (Mathf.Abs(transform.position.x) > 9)
+				transform.position = new Vector3(9, transform.position.y, transform.position.z);
+
 			// Get input of antagonist
 			Vector3 mousePos = Camera.main!.ScreenToWorldPoint(Input.mousePosition);
 
