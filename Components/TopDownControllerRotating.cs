@@ -3,27 +3,16 @@ using UnityEngine;
 
 namespace Unity_Essentials.Components
 {
-	public class FirstPersonController2DTopdown : MonoBehaviour
+	public class TopDownControllerRotating : MonoBehaviour
 	{
 		public float movementSpeed;
 		public float rotationSpeed;
-		public int maxSpotCount;
-		public int maxBeamCount;
 
 		// Define keybindings
 		public KeyCode rotateLeft;
 		public KeyCode rotateRight;
 		public KeyCode forward;
 		public KeyCode backward;
-
-		public KeyCode beamHorizontal;
-		public KeyCode beamVertical;
-		public KeyCode spot;
-
-		// Get references to prefabs
-		public GameObject beamHorizontalPrefab;
-		public GameObject beamVerticalPrefab;
-		public GameObject spotPrefab;
 
 		public void Update()
 		{
