@@ -27,9 +27,6 @@ namespace Unity_Essentials.Components
 
 		public void Update()
 		{
-			if (Singleton<GameManager>.Instance.CurrentGameState != GameManager.GameState.Playing)
-				return;
-
 			// Get input of player
 			float forwardMovement = 0;
 			float rotationDegrees = 0;
@@ -51,22 +48,6 @@ namespace Unity_Essentials.Components
 				transform.position = new Vector3(transform.position.x, 5, transform.position.z);
 			if (Mathf.Abs(transform.position.x) > 9)
 				transform.position = new Vector3(9, transform.position.y, transform.position.z);
-
-			// Get input of antagonist
-			Vector3 mousePos = Camera.main!.ScreenToWorldPoint(Input.mousePosition);
-
-			# nullable enable
-			GameObject? placedPrefab = null;
-			if (Input.GetKeyDown(beamHorizontal) && Singleton<GameManager>.Instance.BeamCount < maxBeamCount)
-				placedPrefab = Instantiate(beamHorizontalPrefab);
-			if (Input.GetKeyDown(beamVertical) && Singleton<GameManager>.Instance.BeamCount < maxBeamCount)
-				placedPrefab = Instantiate(beamVerticalPrefab);
-			if (Input.GetKeyDown(spot) && Singleton<GameManager>.Instance.SpotCount < maxSpotCount)
-				placedPrefab = Instantiate(spotPrefab);
-
-			if (placedPrefab != null)
-				placedPrefab.transform.position = new Vector3(mousePos.x, mousePos.y, placedPrefab.transform.position.z);
-			#nullable disable
 		}
 	}
 }
