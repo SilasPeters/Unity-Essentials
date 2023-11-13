@@ -1,4 +1,3 @@
-using Unity_Essentials.Static;
 using UnityEngine;
 
 namespace Unity_Essentials.Components
