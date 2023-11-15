@@ -8,6 +8,7 @@ namespace Unity_Essentials.Components
 	public class PlayerController2D : MonoBehaviour
 	{
 		public float walkForce;
+		public float walkTilt;
 		public float jumpForce;
 		[Range(0, 1)] public float dropForceMultiplier;
 
@@ -33,14 +34,18 @@ namespace Unity_Essentials.Components
 			Vector2 deltaWalkForce = Vector2.zero;
 			Vector2 deltaJumpForce = Vector2.zero;
 
+			float playerRotation = 0;
+
 			// Walking
 			if (walkLeft.AnyPressed())
 			{
 				deltaWalkForce -= Vector2.right;
+				playerRotation -= walkTilt;
 			}
 			if (walkRight.AnyPressed())
 			{
 				deltaWalkForce += Vector2.right;
+				playerRotation += walkTilt;
 			}
 
 			deltaWalkForce *= walkForce;
@@ -64,7 +69,8 @@ namespace Unity_Essentials.Components
 			// }
 
 			_rigidbody.AddForce(deltaJumpForce, ForceMode2D.Impulse);
-			transform.position += (Vector3)deltaWalkForce * Time.deltaTime;
+			transform.position      += (Vector3)deltaWalkForce * Time.deltaTime;
+			transform.localRotation =  Quaternion.AngleAxis(playerRotation, Vector3.back);
 		}
 
 		private bool IsGrounded() => groundedBox.IsGrounded;
