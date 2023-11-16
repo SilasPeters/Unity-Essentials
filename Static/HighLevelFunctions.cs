@@ -22,7 +22,7 @@ namespace Unity_Essentials.Static
 			void setNextTimestamp() => nextTimestamp = Time.time + duration;
 		}
 
-		public static IEnumerator Lerp(float duration, Action<float> action)
+		public static IEnumerator Lerp(float duration, Action<float> action, bool onceAfter = false)
 		{
 			float timeStart = Time.time;
 
@@ -30,6 +30,11 @@ namespace Unity_Essentials.Static
 			{
 				action.Invoke((Time.time - timeStart) / duration);
 				yield return null;
+			}
+
+			if (onceAfter)
+			{
+				action.Invoke(1f);
 			}
 		}
 
