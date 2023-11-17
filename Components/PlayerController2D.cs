@@ -1,9 +1,5 @@
-using System;
-using System.Collections;
 using Unity_Essentials.Static;
-using Unity_Essentials.Static.ExtensionMethods;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Unity_Essentials.Components
 {
@@ -83,13 +79,9 @@ namespace Unity_Essentials.Components
 		{
 			if (!(_isWalking || _shouldJump)) return;
 
-			StartCoroutine(HighLevelFunctions.Lerp(e.PeriodLength * 0.8f, progression =>
+			StartCoroutine(HighLevelFunctions.Lerp(e.PeriodLength * 0.9f, progression =>
 			{
-				Camera.main.backgroundColor = new Color(
-					Mathf.Lerp(backgroundHitColor.r, _backgroundColor.r, progression),
-					Mathf.Lerp(backgroundHitColor.g, _backgroundColor.g, progression),
-					Mathf.Lerp(backgroundHitColor.b, _backgroundColor.b, progression),
-					_backgroundColor.a);
+				Camera.main.backgroundColor = Color.Lerp(backgroundHitColor, _backgroundColor, progression);
 			}, onceAfter: true));
 		}
 
@@ -105,11 +97,13 @@ namespace Unity_Essentials.Components
 			{
 				deltaWalkForce -= Vector2.right;
 				playerRotation -= Grounded ? walkTilt : jumpTilt;
+				Singleton<SmartCamera>.Instance.MoveCameraLeft();
 			}
 			if (walkRight.AnyPressed())
 			{
 				deltaWalkForce += Vector2.right;
 				playerRotation += Grounded ? walkTilt : jumpTilt;
+				Singleton<SmartCamera>.Instance.MoveCameraRight();
 			}
 
 			deltaWalkForce *= walkForce;
