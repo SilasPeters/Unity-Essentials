@@ -39,7 +39,7 @@ namespace Unity_Essentials.Components
 		private bool Grounded => _collisions2D.OnGround;
 
 		private bool _isWalking;
-		private bool _shouldJump;
+		// private bool _shouldJump;
 		private Color _backgroundColor;
 
 		private void Awake()
@@ -54,30 +54,36 @@ namespace Unity_Essentials.Components
 		{
 			Singleton<Rhythm>.Instance.OnBeat += FootStep;
 			Singleton<Rhythm>.Instance.OnBeat += HitBackground;
-			Singleton<Rhythm>.Instance.OnBeat += Jump;
 		}
 
 		private void FootStep(object o, RhythmEventArgs e)
 		{
-			if (!_isWalking || _shouldJump) return;
+			if (!_isWalking) return;
 			Instantiate(footStepPrefab, transform.position + footstepOffset + new Vector3(0, 0, 10), Quaternion.identity);
 			
 			// Play audio
 			audioSource.PlayOneShot(footstepsSound[e.BeatIndex % footstepsSound.Length]);
 		}
 
-		private void Jump(object o, RhythmEventArgs e)
+		// private void Jump(object o, RhythmEventArgs e)
+		// {
+		// 	if (!_shouldJump) return;
+		// 	_rigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+		// 	Instantiate(jumpPrefab, transform.position + jumpOffset + new Vector3(0, 0, 11), Quaternion.identity);
+		// 	audioSource.PlayOneShot(jumpSound);
+		// 	_shouldJump = false;
+		// }
+
+		private void Jump()
 		{
-			if (!_shouldJump) return;
 			_rigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 			Instantiate(jumpPrefab, transform.position + jumpOffset + new Vector3(0, 0, 11), Quaternion.identity);
 			audioSource.PlayOneShot(jumpSound);
-			_shouldJump = false;
 		}
 
 		private void HitBackground(object o, RhythmEventArgs e)
 		{
-			if (!(_isWalking || _shouldJump)) return;
+			if (!_isWalking) return;
 
 			StartCoroutine(HighLevelFunctions.Lerp(e.PeriodLength * 0.9f, progression =>
 			{
@@ -111,7 +117,7 @@ namespace Unity_Essentials.Components
 			// Jumping
 			if (jump.AnyDown() && Grounded)
 			{
-				_shouldJump = true;
+				Jump();
 			}
 			if (drop.AnyPressed() && !Grounded)
 			{
