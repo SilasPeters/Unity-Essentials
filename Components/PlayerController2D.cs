@@ -1,5 +1,7 @@
+using System.Collections;
 using Unity_Essentials.Static;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Unity_Essentials.Components
 {
@@ -30,6 +32,16 @@ namespace Unity_Essentials.Components
 		public AudioClip jumpSound;
 
 		public Color backgroundHitColor;
+
+		[Header("Keytar")]
+		public Transform guitar;
+		public GameObject soundWavePrefab;
+		public GameObject soundWaveIconPrefab;
+		public Vector3 soundwaveOffset;
+		public Transform arm;
+		public Transform otherArm;
+		public Transform armAnimation;
+		public float armMoveDuration;
 
 		// Required Components
 		private Collisions2D _collisions2D;
@@ -91,8 +103,42 @@ namespace Unity_Essentials.Components
 			}, onceAfter: true));
 		}
 
+		private void Keytar()
+		{
+			Vector3 mousePos2D  = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			float directionSign = Mathf.Sign(mousePos2D.x - transform.position.x);
+
+			Vector3 offset      = new Vector3(soundwaveOffset.x * directionSign, soundwaveOffset.y, soundwaveOffset.z);
+			Vector3 sourcePos2D = transform.position + offset;
+			mousePos2D.z  = 0;
+			sourcePos2D.z = 0;
+
+			Vector2 delta = mousePos2D - sourcePos2D;
+			float   angle = Mathf.Atan2(delta.y, delta.x);
+
+			Quaternion direction = Quaternion.AngleAxis(Mathf.Rad2Deg * angle, new Vector3(0, 0, 1));
+
+			Instantiate(soundWavePrefab,     sourcePos2D, direction);
+			Instantiate(soundWaveIconPrefab, transform.position, directionSign >= 0 ? Quaternion.identity : Quaternion.AngleAxis(180, Vector3.up), transform);
+
+			StartCoroutine(MoveArm());
+		}
+
+		private IEnumerator MoveArm()
+		{
+			var t = audioSource.volume;
+			audioSource.volume = t * 0.3f;
+			yield return HighLevelFunctions.Lerp(armMoveDuration, progress =>
+			{
+				arm.localRotation = Quaternion.AngleAxis(Mathf.Sin(progress * 6 * 2 * Mathf.PI) * 10, Vector3.forward);
+			}, onceAfter: true);
+			audioSource.volume = t;
+		}
+
 		protected void Update()
 		{
+			// Instantiate(soundWavePrefab, Camera.main.ScreenToWorldPoint(Input.mousePosition), Quaternion.identity);
+
 			Vector2 deltaWalkForce = Vector2.zero;
 			Vector2 deltaJumpForce = Vector2.zero;
 
@@ -131,11 +177,17 @@ namespace Unity_Essentials.Components
 
 			// Events
 			_isWalking = deltaWalkForce != Vector2.zero && Grounded; // Player is walking
+
+			if (Input.GetKeyDown(KeyCode.Mouse0))
+			{
+				Keytar();
+			}
 		}
 
 		private void OnDrawGizmos()
 		{
 			Gizmos.DrawSphere(transform.position + footstepOffset, 0.3f); // Footstep
+			Gizmos.DrawSphere(transform.position + soundwaveOffset, 0.2f); // soundwave origin
 		}
 	}
 }

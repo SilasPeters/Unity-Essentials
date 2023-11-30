@@ -42,5 +42,8 @@ namespace Unity_Essentials.Static
 		{
 			yield return new WaitForSeconds(seconds);
 		}
+
+		public static Color SetOpacity(this Color c, float opacity)
+			=> new(c.r, c.g, c.b, opacity);
 	}
 }
