@@ -42,6 +42,7 @@ namespace Unity_Essentials.Components
 		public Transform otherArm;
 		public Transform armAnimation;
 		public float armMoveDuration;
+		public float riffCooldown;
 
 		// Required Components
 		private Collisions2D _collisions2D;
@@ -53,6 +54,7 @@ namespace Unity_Essentials.Components
 		private bool _isWalking;
 		// private bool _shouldJump;
 		private Color _backgroundColor;
+		private bool _canRiff = true;
 
 		private void Awake()
 		{
@@ -126,6 +128,7 @@ namespace Unity_Essentials.Components
 
 		private IEnumerator MoveArm()
 		{
+			_canRiff = false;
 			var t = audioSource.volume;
 			audioSource.volume = t * 0.3f;
 			yield return HighLevelFunctions.Lerp(armMoveDuration, progress =>
@@ -133,12 +136,13 @@ namespace Unity_Essentials.Components
 				arm.localRotation = Quaternion.AngleAxis(Mathf.Sin(progress * 6 * 2 * Mathf.PI) * 10, Vector3.forward);
 			}, onceAfter: true);
 			audioSource.volume = t;
+
+			yield return new WaitForSeconds(riffCooldown);
+			_canRiff = true;
 		}
 
 		protected void Update()
 		{
-			// Instantiate(soundWavePrefab, Camera.main.ScreenToWorldPoint(Input.mousePosition), Quaternion.identity);
-
 			Vector2 deltaWalkForce = Vector2.zero;
 			Vector2 deltaJumpForce = Vector2.zero;
 
@@ -178,9 +182,14 @@ namespace Unity_Essentials.Components
 			// Events
 			_isWalking = deltaWalkForce != Vector2.zero && Grounded; // Player is walking
 
-			if (Input.GetKeyDown(KeyCode.Mouse0))
+			if (_canRiff && Input.GetKeyDown(KeyCode.Mouse0))
 			{
 				Keytar();
+			}
+
+			if (transform.position.y < -50)
+			{
+				transform.position = new Vector3(transform.position.x, 40, transform.position.z);
 			}
 		}
 
