@@ -43,6 +43,7 @@ namespace Unity_Essentials.Components
 		public Transform armAnimation;
 		public float armMoveDuration;
 		public float riffCooldown;
+		public SpriteRenderer guitarRenderer;
 
 		// Required Components
 		private Collisions2D _collisions2D;
@@ -128,7 +129,9 @@ namespace Unity_Essentials.Components
 
 		private IEnumerator MoveArm()
 		{
-			_canRiff = false;
+			_canRiff    = false;
+			guitarRenderer.color = new Color(0.7714415f, 0.4083766f, 0.4083766f);
+
 			var t = audioSource.volume;
 			audioSource.volume = t * 0.3f;
 			yield return HighLevelFunctions.Lerp(armMoveDuration, progress =>
@@ -138,7 +141,9 @@ namespace Unity_Essentials.Components
 			audioSource.volume = t;
 
 			yield return new WaitForSeconds(riffCooldown);
-			_canRiff = true;
+
+			guitarRenderer.color = Color.white;
+			_canRiff    = true;
 		}
 
 		protected void Update()
